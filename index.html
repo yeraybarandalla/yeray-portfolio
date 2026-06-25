@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yeray Barandalla — Portafolio IA</title>
+    <meta name="description" content="Portafolio de Yeray Barandalla. Carruseles que venden, agentes de voz con IA, creativos publicitarios y branding estratégico potenciado por inteligencia artificial." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ─── RESET ─── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #05050A;
+            color: #e8e4e0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0f; }
+        ::-webkit-scrollbar-thumb { background: #a855f7; border-radius: 3px; }
+
+        /* ─── PARTICLE BG ─── */
+        #particles-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* ─── TYPOGRAPHY ─── */
+        h1, h2, h3, h4, .heading-accent {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        h1 { font-size: clamp(2.5rem, 7vw, 4.8rem); line-height: 1.05; }
+        h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); }
+        h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); }
+        .gold { color: #d4a853; }
+        .purple { color: #a855f7; }
+        .muted { color: #666; }
+        .label-sm {
+            font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+            color: #a855f7; margin-bottom: 0.5rem; font-weight: 600;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(5,5,10,0.85); backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(168,85,247,0.08);
+            transition: border-color 0.3s;
+        }
+        nav.scrolled { border-color: rgba(168,85,247,0.25); }
+        .nav-logo {
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+            font-size: 1.1rem; letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #a855f7, #d4a853);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-links a {
+            color: #888; text-decoration: none; font-size: 0.8rem; font-weight: 500;
+            letter-spacing: 1px; text-transform: uppercase; transition: color 0.3s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -4px; left: 0; width: 0;
+            height: 1px; background: #a855f7; transition: width 0.3s;
+        }
+        .nav-links a:hover { color: #fff; }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-cta {
+            padding: 0.5rem 1.4rem !important;
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            border-radius: 50px; color: #fff !important;
+            transition: transform 0.3s, box-shadow 0.3s !important;
+        }
+        .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(168,85,247,0.3); }
+        .nav-cta::after { display: none !important; }
+        .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; z-index: 101; }
+        .nav-hamburger span { width: 22px; height: 2px; background: #a855f7; transition: 0.3s; display: block; }
+
+        /* ─── HERO ─── */
+        .hero {
+            position: relative; z-index: 1;
+            min-height: 100vh; display: flex; align-items: center;
+            padding: 6rem 2rem 4rem;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1200px; margin: 0 auto;
+            width: 100%; align-items: center;
+        }
+        .hero-content { max-width: 600px; }
+        .hero-badge {
+            display: inline-block;
+            padding: 0.35rem 1rem; margin-bottom: 1.5rem;
+            border: 1px solid rgba(168,85,247,0.25);
+            border-radius: 100px;
+            font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+            color: #a855f7; background: rgba(168,85,247,0.06);
+        }
+        .hero h1 { margin-bottom: 0.8rem; }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #a855f7, #d4a853, #a855f7);
+            background-size: 200% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+        }
+        .hero-sub {
+            font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+            color: #999; margin-bottom: 2rem;
+            max-width: 520px; line-height: 1.8;
+        }
+        .hero-stats {
+            display: flex; gap: 2.5rem; margin-bottom: 2.5rem;
+        }
+        .hero-stat { text-align: left; }
+        .hero-stat-num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem; font-weight: 700;
+            background: linear-gradient(135deg, #a855f7, #d4a853);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-stat-label { font-size: 0.7rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.2rem; }
+        .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            padding: 0.85rem 2rem;
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            color: #fff; font-weight: 600; font-size: 0.85rem;
+            border: none; border-radius: 50px; cursor: pointer;
+            text-decoration: none; text-transform: uppercase; letter-spacing: 1.2px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(168,85,247,0.35);
+        }
+        .btn-outline {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            padding: 0.85rem 2rem;
+            border: 1px solid rgba(168,85,247,0.3);
+            color: #a855f7; font-weight: 500; font-size: 0.85rem;
+            border-radius: 50px; cursor: pointer;
+            text-decoration: none; text-transform: uppercase; letter-spacing: 1.2px;
+            transition: 0.3s;
+        }
+        .btn-outline:hover { border-color: #a855f7; background: rgba(168,85,247,0.06); }
+
+        .hero-visual {
+            display: flex; justify-content: center; align-items: center;
+            position: relative;
+        }
+        .hero-visual img {
+            width: 100%; max-width: 420px;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 1px solid rgba(168,85,247,0.12);
+            box-shadow: 0 30px 80px rgba(168,85,247,0.15);
+            transition: transform 0.5s;
+        }
+        .hero-visual img:hover { transform: scale(1.02); }
+        .hero-glow {
+            position: absolute; width: 300px; height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(168,85,247,0.12), transparent);
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        .scroll-indicator {
+            position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+            color: #444; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;
+            animation: bounceDown 2s ease-in-out infinite;
+        }
+        .scroll-indicator .line {
+            width: 1px; height: 35px;
+            background: linear-gradient(to bottom, #a855f744, transparent);
+        }
+        @keyframes bounceDown {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(6px); }
+        }
+
+        /* ─── SECTION COMMON ─── */
+        section { position: relative; z-index: 1; padding: 6rem 2rem; }
+        .section-inner { max-width: 1200px; margin: 0 auto; }
+        .section-title { margin-bottom: 1rem; }
+        .section-desc { color: #888; max-width: 600px; line-height: 1.8; margin-bottom: 3rem; font-size: 1rem; }
+
+        /* ─── MUSEUM / GALLERY ─── */
+        .museum-intro { margin-bottom: 3rem; }
+        .museum-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+        }
+        .exhibit {
+            border-radius: 16px; overflow: hidden;
+            background: linear-gradient(145deg, rgba(168,85,247,0.03), rgba(212,168,83,0.02));
+            border: 1px solid rgba(168,85,247,0.08);
+            cursor: pointer;
+            transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s;
+        }
+        .exhibit:hover {
+            transform: translateY(-6px);
+            border-color: rgba(168,85,247,0.2);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        .exhibit-image {
+            width: 100%; aspect-ratio: 4/3;
+            overflow: hidden; position: relative;
+            background: #0a0a14;
+        }
+        .exhibit-image img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+        .exhibit:hover .exhibit-image img { transform: scale(1.05); }
+        .exhibit-tag {
+            position: absolute; top: 1rem; left: 1rem;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase;
+            border-radius: 100px;
+            background: rgba(168,85,247,0.15);
+            backdrop-filter: blur(8px);
+            color: #c084fc;
+            border: 1px solid rgba(168,85,247,0.2);
+        }
+        .exhibit-body {
+            padding: 1.5rem 1.8rem 1.8rem;
+        }
+        .exhibit-body h3 {
+            font-size: 1.1rem; margin-bottom: 0.4rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .exhibit-body .exhibit-icon { font-size: 1.2rem; }
+        .exhibit-body .exhibit-sub {
+            font-size: 0.8rem; color: #a855f7; margin-bottom: 0.6rem;
+            letter-spacing: 0.5px;
+        }
+        .exhibit-body p {
+            color: #888; font-size: 0.85rem; line-height: 1.7;
+        }
+        .exhibit-body .exhibit-link {
+            display: inline-block; margin-top: 0.8rem;
+            font-size: 0.75rem; color: #a855f7; text-decoration: none;
+            font-weight: 600; letter-spacing: 0.5px;
+            transition: color 0.3s;
+        }
+        .exhibit-body .exhibit-link:hover { color: #d4a853; }
+
+        /* ─── SERVICES ─── */
+        #servicios { background: linear-gradient(180deg, transparent, rgba(168,85,247,0.02)); }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.2rem;
+        }
+        .service-item {
+            padding: 2rem 1.8rem;
+            border-radius: 12px;
+            border: 1px solid rgba(168,85,247,0.06);
+            background: rgba(168,85,247,0.02);
+            transition: border-color 0.3s, background 0.3s;
+        }
+        .service-item:hover {
+            border-color: rgba(168,85,247,0.15);
+            background: rgba(168,85,247,0.04);
+        }
+        .service-item .icon { font-size: 1.8rem; margin-bottom: 0.8rem; display: block; }
+        .service-item h4 { font-size: 0.95rem; margin-bottom: 0.4rem; color: #ddd; }
+        .service-item p { font-size: 0.82rem; color: #777; line-height: 1.7; }
+
+        /* ─── CTA ─── */
+        #contacto {
+            text-align: center;
+            padding: 8rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        #contacto::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse at center, rgba(168,85,247,0.06), transparent 70%);
+            pointer-events: none;
+        }
+        .cta-content { position: relative; z-index: 1; }
+        .cta-content h2 { margin-bottom: 1rem; }
+        .cta-content p { color: #aaa; max-width: 500px; margin: 0 auto 2.5rem; font-size: 1.05rem; }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        /* ─── FOOTER ─── */
+        footer {
+            position: relative; z-index: 1;
+            text-align: center; padding: 3rem 2rem;
+            border-top: 1px solid rgba(168,85,247,0.06);
+            color: #444; font-size: 0.78rem;
+        }
+        footer .social-links {
+            display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem;
+        }
+        footer .social-links a {
+            color: #666; text-decoration: none; font-size: 0.8rem;
+            transition: color 0.3s;
+        }
+        footer .social-links a:hover { color: #a855f7; }
+
+        /* ─── REVEAL ─── */
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ─── SECTION DIVIDER ─── */
+        .section-divider {
+            width: 40px; height: 2px;
+            background: linear-gradient(90deg, #a855f7, #d4a853);
+            margin: 0 auto 1.5rem;
+            border-radius: 4px;
+        }
+
+        /* ─── MODAL ─── */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(16px);
+            display: none; align-items: center; justify-content: center;
+            padding: 2rem;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal {
+            max-width: 700px; width: 100%; max-height: 85vh;
+            background: #0d0d1a;
+            border: 1px solid rgba(168,85,247,0.15);
+            border-radius: 20px;
+            overflow-y: auto;
+            padding: 2.5rem;
+            transform: scale(0.9); transition: transform 0.3s;
+        }
+        .modal-overlay.active .modal { transform: scale(1); }
+        .modal-close {
+            float: right; background: none; border: none;
+            color: #666; font-size: 1.5rem; cursor: pointer;
+            transition: color 0.3s;
+        }
+        .modal-close:hover { color: #fff; }
+        .modal-image {
+            width: 100%; border-radius: 12px; margin-bottom: 1.5rem;
+            border: 1px solid rgba(168,85,247,0.1);
+        }
+        .modal h2 { font-size: 1.5rem; margin-bottom: 0.3rem; }
+        .modal .modal-sub { color: #a855f7; font-size: 0.85rem; margin-bottom: 1rem; }
+        .modal p { color: #999; line-height: 1.8; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .modal .btn-primary { display: inline-flex; }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 900px) {
+            .hero-grid { grid-template-columns: 1fr; text-align: center; }
+            .hero-content { max-width: 100%; }
+            .hero-sub { margin-left: auto; margin-right: auto; }
+            .hero-stats { justify-content: center; }
+            .hero-buttons { justify-content: center; }
+            .hero-visual img { max-width: 300px; }
+            .hero-visual { order: -1; }
+        }
+        @media (max-width: 768px) {
+            nav { padding: 0.8rem 1.2rem; }
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 75%; height: 100vh;
+                background: rgba(10,10,20,0.98); backdrop-filter: blur(20px);
+                flex-direction: column; justify-content: center; align-items: center;
+                transition: right 0.4s; border-left: 1px solid rgba(168,85,247,0.1);
+                gap: 2rem;
+            }
+            .nav-links.open { right: 0; }
+            .nav-hamburger { display: flex; }
+            .nav-hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+            .nav-hamburger.active span:nth-child(2) { opacity: 0; }
+            .nav-hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+            section { padding: 4rem 1.2rem; }
+            .museum-grid { grid-template-columns: 1fr; }
+            .services-grid { grid-template-columns: 1fr; }
+            .hero-stats { gap: 1.5rem; }
+            .modal { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ─── PARTICLES ─── -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- ─── NAV ─── -->
+    <nav id="navbar">
+        <div class="nav-logo">✦ YERAY</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#museo">Museo</a></li>
+            <li><a href="#servicios">Servicios</a></li>
+            <li><a href="#contacto" class="nav-cta">Contacto</a></li>
+        </ul>
+        <button class="nav-hamburger" id="hamburger" aria-label="Menú">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- ─── HERO ─── -->
+    <section class="hero" id="inicio">
+        <div class="hero-grid">
+            <div class="hero-content">
+                <div class="hero-badge">✦ IA Aplicada</div>
+                <h1>
+                    Transformo negocios en<br/>
+                    <span class="highlight">autoridad ineludible</span><br/>
+                    con IA
+                </h1>
+                <p class="hero-sub">
+                    Carruseles que venden. Agentes de voz. Creativos publicitarios.
+                    Branding. Automatización. Cada proyecto es una obra
+                    que construyo con inteligencia artificial y estrategia real.
+                </p>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-num">8+</div>
+                        <div class="hero-stat-label">Proyectos</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-num">5</div>
+                        <div class="hero-stat-label">Nichos</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-num">24</div>
+                        <div class="hero-stat-label">Carruseles</div>
+                    </div>
+                </div>
+                <div class="hero-buttons">
+                    <a href="#museo" class="btn-primary">Ver obras →</a>
+                    <a href="#contacto" class="btn-outline">¿Hablamos?</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-glow"></div>
+                <img src="assets/yeray-arcane.png" alt="Yeray Barandalla" />
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Explora</span>
+            <div class="line"></div>
+        </div>
+    </section>
+
+    <!-- ─── MUSEO / GALERÍA ─── -->
+    <section id="museo">
+        <div class="section-inner">
+            <p class="label-sm reveal">✦ Museo</p>
+            <h2 class="section-title reveal">Galería de obras</h2>
+            <p class="section-desc reveal">
+                Cada proyecto es una pieza única. Clientes reales, resultados reales.
+                Pulsa sobre cada obra para verla en detalle.
+            </p>
+            <div class="museum-grid">
+
+                <!-- Exhibit 1: Tornike -->
+                <div class="exhibit reveal" onclick="openModal('tornike')">
+                    <div class="exhibit-image">
+                        <img src="assets/tornike-slide1.png" alt="Tornike" loading="lazy" />
+                        <span class="exhibit-tag">🏋️ Fitness</span>
+                    </div>
+                    <div class="exhibit-body">
+                        <h3><span class="exhibit-icon">🏋️</span> Tornike — 40+ Fitness</h3>
+                        <div class="exhibit-sub">Carruseles Instagram · Estilo Pixar 3D</div>
+                        <p>13 carruseles para entrenador hormonal masculino. Estilo animación 3D, personaje recurrente, gama cromática verde neón (#02E675) sobre fondos oscuros. 24 temas documentados.</p>
+                        <a class="exhibit-link" onclick="event.stopPropagation();openModal('tornike')">Ver proyecto →</a>
+                    </div>
+                </div>
+
+                <!-- Exhibit 2: OpenClaw -->
+                <div class="exhibit reveal" onclick="openModal('openclaw')">
+                    <div class="exhibit-image">
+                        <img src="assets/openclaw-ad.png" alt="OpenClaw" loading="lazy" />
+                        <span class="exhibit-tag">🤖 IA</span>
+                    </div>
+                    <div class="exhibit-body">
+                        <h3><span class="exhibit-icon">🦾</span> OpenClaw</h3>
+                        <div class="exhibit-sub">Carrusel promocional · Automatización IA</div>
+                        <p>Anuncio para plataforma de agentes IA. Copy técnico accesible, diseño futurista con brazo robótico y neón. Integración con modelo Deepseek V4 Flash.</p>
+                        <a class="exhibit-link" onclick="event.stopPropagation();openModal('openclaw')">Ver proyecto →</a>
+                    </div>
+                </div>
+
+                <!-- Exhibit 3: Nova Clinic / Sofía -->
+                <div class="exhibit reveal" onclick="openModal('nova')">
+                    <div class="exhibit-image">
+                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d0d1a,#1a1040);">
+                            <div style="text-align:center;padding:2rem;">
+                                <div style="font-size:4rem;margin-bottom:0.5rem;">🦷</div>
+                                <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:#a855f7;">Sofía</div>
+                                <div style="font-size:0.7rem;color:#666;margin-top:0.3rem;">Agente de Voz IA</div>
+                            </div>
+                        </div>
+                        <span class="exhibit-tag">🎙️ Voice AI</span>
+                    </div>
+                    <div class="exhibit-body">
+                        <h3><span class="exhibit-icon">🦷</span> Nova Clinic — Sofía</h3>
+                        <div class="exhibit-sub">Agente de voz · ElevenLabs</div>
+                        <p>Asistente virtual con voz natural para clínica dental. Reserva de citas, información de servicios, atención 24/7. Agente de voz entrenado con ElevenLabs.</p>
+                        <a class="exhibit-link" onclick="event.stopPropagation();openModal('nova')">Ver proyecto →</a>
+                    </div>
+                </div>
+
+                <!-- Exhibit 4: optim'lk PRO -->
+                <div class="exhibit reveal" onclick="openModal('optimlk')">
+                    <div class="exhibit-image">
+                        <img src="assets/optimlk-pro.png" alt="optim'lk PRO" loading="lazy" />
+                        <span class="exhibit-tag">🥤 Producto</span>
+                    </div>
+                    <div class="exhibit-body">
+                        <h3><span class="exhibit-icon">🥤</span> optim'lk PRO</h3>
+                        <div class="exhibit-sub">Creativo IA de producto · 3 sabores</div>
+                        <p>De la foto del producto a 3 versiones publicitarias con IA. Mockups tipo smartphone con salpicaduras dinámicas. Listo para anuncios, stories y reels.</p>
+                        <a class="exhibit-link" onclick="event.stopPropagation();openModal('optimlk')">Ver proyecto →</a>
+                    </div>
+                </div>
+
+                <!-- Exhibit 5: Genesis Empire -->
+                <div class="exhibit reveal" onclick="openModal('genesis')">
+                    <div class="exhibit-image">
+                        <img src="assets/genesis-empire.png" alt="Genesis Empire" loading="lazy" />
+                        <span class="exhibit-tag">🏛️ Branding</span>
+                    </div>
+                    <div class="exhibit-body">
+                        <h3><span class="exhibit-icon">🏛️</span> Genesis Empire</h3>
+                        <div class="exhibit-sub">Identidad de marca · Logotipo</div>
+                        <p>Identidad visual completa para agencia de ventas. Logo fénix con runas, tipografía dorada metálica, patrón de greca griega. Poder, legado y transformación.</p>
+                        <a class="exhibit-link" onclick="event.stopPropagation();openModal('genesis')">Ver proyecto →</a>
+                    </div>
+                </div>
+
+                <!-- Exhibit 6: 305 Motors -->
+                <div class="exhibit reveal" onclick="openModal('motors')">
+                    <div class="exhibit-image">
+                        <img src="assets/305-motors.jpeg" alt="305 Motors Miami" loading="lazy" />
+                        <span class="exhibit-tag">🚗 Automoción</span>
+                    </div>
+                    <div class="exhibit-body">
+                        <h3><span class="exhibit-icon">🚗</span> 305 Motors Miami</h3>
+                        <div class="exhibit-sub">Anuncio · Concesionario Toyota & Hyundai</div>
+                        <p>Anuncio publicitario para concesionario en Miami. Copy persuasivo, financiación flexible, targeting a comunidad latina. Diseño premium sobre fondo oscuro.</p>
+                        <a class="exhibit-link" onclick="event.stopPropagation();openModal('motors')">Ver proyecto →</a>
+                    </div>
+                </div>
+
+                <!-- Exhibit 7: ARCANO -->
+                <div class="exhibit reveal" onclick="openModal('arcano')">
+                    <div class="exhibit-image">
+                        <img src="assets/yeray-arcane.png" alt="ARCANO" loading="lazy" />
+                        <span class="exhibit-tag">✦ Marca Personal</span>
+                    </div>
+                    <div class="exhibit-body">
+                        <h3><span class="exhibit-icon">✦</span> ARCANO</h3>
+                        <div class="exhibit-sub">Identidad visual · Estilo oscuro premium</div>
+                        <p>Mi marca personal. Estética oscura, púrpura y dorada. El estilo que define mi método: místico, premium, magnético. Aplicado a cada proyecto de cliente.</p>
+                        <a class="exhibit-link" onclick="event.stopPropagation();openModal('arcano')">Ver proyecto →</a>
+                    </div>
+                </div>
+
+                <!-- Exhibit 8: Custom GPTs -->
+                <div class="exhibit reveal" onclick="openModal('gpts')">
+                    <div class="exhibit-image">
+                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d0d1a,#1a1040);">
+                            <div style="text-align:center;padding:2rem;">
+                                <div style="font-size:4rem;margin-bottom:0.5rem;">🧠</div>
+                                <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:#d4a853;">GPTs</div>
+                                <div style="font-size:0.7rem;color:#666;margin-top:0.3rem;">A medida</div>
+                            </div>
+                        </div>
+                        <span class="exhibit-tag">🧠 Custom</span>
+                    </div>
+                    <div class="exhibit-body">
+                        <h3><span class="exhibit-icon">🧠</span> GPTs Personalizados</h3>
+                        <div class="exhibit-sub">Asistentes IA a medida</div>
+                        <p>Creación de GPTs customizados para tu negocio: atención al cliente, generación de contenido, análisis de datos, embudos de venta. Cada GPT entrenado con tu conocimiento.</p>
+                        <a class="exhibit-link" onclick="event.stopPropagation();openModal('gpts')">Ver proyecto →</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── SERVICIOS ─── -->
+    <section id="servicios">
+        <div class="section-inner">
+            <p class="label-sm reveal">✦ Servicios</p>
+            <h2 class="section-title reveal">Lo que hago con IA</h2>
+            <p class="section-desc reveal">
+                No uso IA para sustituir estrategia. La uso para ejecutar a nivel
+                imposible para un humano solo. Tú pones el producto y la visión,
+                yo pongo el motor.
+            </p>
+            <div class="services-grid">
+                <div class="service-item reveal">
+                    <span class="icon">🎨</span>
+                    <h4>Carruseles Instagram</h4>
+                    <p>Estructura storytelling, copy persuasivo y dirección de arte con IA. Cada slide diseñado para vender.</p>
+                </div>
+                <div class="service-item reveal">
+                    <span class="icon">🎙️</span>
+                    <h4>Agentes de Voz IA</h4>
+                    <p>Agentes telefónicos con ElevenLabs: reservas, atención al cliente, información 24/7 con voz natural.</p>
+                </div>
+                <div class="service-item reveal">
+                    <span class="icon">📸</span>
+                    <h4>Creativos de Producto</h4>
+                    <p>De una foto a múltiples versiones publicitarias. Anuncios, stories, reels. Sin sesiones de fotos.</p>
+                </div>
+                <div class="service-item reveal">
+                    <span class="icon">🏛️</span>
+                    <h4>Branding con IA</h4>
+                    <p>Logos, identidad visual, dirección de arte. Desde estilo Pixar 3D hasta oscuro premium.</p>
+                </div>
+                <div class="service-item reveal">
+                    <span class="icon">🧠</span>
+                    <h4>GPTs Personalizados</h4>
+                    <p>Asistentes IA a medida para tu negocio. Entrenados con tu conocimiento y tu voz.</p>
+                </div>
+                <div class="service-item reveal">
+                    <span class="icon">⚡</span>
+                    <h4>Automatizaciones</h4>
+                    <p>Transcripción de reels, análisis de contenido, flujos automatizados. Escala tu producción sin escalar tu equipo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── CTA ─── -->
+    <section id="contacto">
+        <div class="cta-content">
+            <p class="label-sm reveal">✦ Contacto</p>
+            <div class="section-divider reveal"></div>
+            <h2 class="section-title reveal">¿Listo para forjar<br/>tu legado digital?</h2>
+            <p class="reveal">
+                Cada proyecto empieza con una conversación. Cuéntame tu idea
+                y construimos algo que realmente funcione.
+            </p>
+            <div class="cta-buttons reveal">
+                <a href="https://instagram.com/yeraybarandalla" target="_blank" class="btn-primary">
+                    Escríbeme en IG →</a>
+                <a href="mailto:yeraybarandalla@gmail.com" class="btn-outline">
+                    Enviar email</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── FOOTER ─── -->
+    <footer>
+        <div class="social-links">
+            <a href="https://instagram.com/yeraybarandalla" target="_blank">Instagram</a>
+            <a href="https://ubiquitous-rugelach-07a6e0.netlify.app/" target="_blank">Nova Clinic</a>
+            <a href="mailto:yeraybarandalla@gmail.com">Email</a>
+        </div>
+        <p>© 2026 Yeray Barandalla — IA &amp; Diseño Estratégico</p>
+    </footer>
+
+    <!-- ─── MODAL ─── -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <script>
+        /* ─── PARTICLES ─── */
+        (function() {
+            const c = document.getElementById('particles-canvas');
+            const ctx = c.getContext('2d');
+            let particles = [];
+            function resize() { c.width = window.innerWidth; c.height = window.innerHeight; }
+            window.addEventListener('resize', resize);
+            resize();
+            for (let i = 0; i < 60; i++) {
+                particles.push({
+                    x: Math.random() * c.width, y: Math.random() * c.height,
+                    vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
+                    r: Math.random() * 1.8 + 0.5, a: Math.random() * 0.4 + 0.08
+                });
+            }
+            function draw() {
+                ctx.clearRect(0, 0, c.width, c.height);
+                for (const p of particles) {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(168,85,247,${p.a})`;
+                    ctx.fill();
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0) p.x = c.width;
+                    if (p.x > c.width) p.x = 0;
+                    if (p.y < 0) p.y = c.height;
+                    if (p.y > c.height) p.y = 0;
+                }
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(168,85,247,${0.04 * (1 - dist / 120)})`;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+
+        /* ─── NAV ─── */
+        const nav = document.getElementById('navbar');
+        window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
+
+        /* ─── HAMBURGER ─── */
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('open');
+        });
+        navLinks.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('open');
+            });
+        });
+
+        /* ─── REVEAL ─── */
+        const revealEls = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            }
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        for (const el of revealEls) observer.observe(el);
+
+        /* ─── MODAL ─── */
+        const modalOverlay = document.getElementById('modal');
+        const modalContent = document.getElementById('modal-content');
+
+        const exhibits = {
+            tornike: {
+                title: '🏋️ Tornike — 40+ Fitness',
+                sub: 'Carruseles Instagram · Estilo Pixar 3D',
+                img: 'assets/tornike-slide1.png',
+                text: `<p><strong>Cliente:</strong> Tornike — entrenador personal para hombres mayores de 40 años.</p>
+                <p><strong>El desafío:</strong> Hombres ocupados (30-50 años) que entrenan sin resultados porque su hormonal ha cambiado. Había que educar sin aburrir, motivar sin ser cliché.</p>
+                <p><strong>La solución:</strong> 13 carruseles con estructura storytelling, cada uno con un hook diferente. Estilo visual Pixar 3D con personaje recurrente (el propio Tornike como avatar cartoon), fondos limpios y acento verde neón #02E675.</p>
+                <p><strong>Resultado:</strong> 24 temas documentados, 9 carruseles completados, identidad visual coherente en toda la marca.</p>`,
+                link: null
+            },
+            openclaw: {
+                title: '🦾 OpenClaw',
+                sub: 'Carrusel promocional · Automatización IA',
+                img: 'assets/openclaw-ad.png',
+                text: `<p><strong>Cliente:</strong> OpenClaw — plataforma de agentes de IA autónomos.</p>
+                <p><strong>El desafío:</strong> Comunicar un producto técnico (agentes IA + Deepseek V4 Flash) de forma visual y atractiva para un público que no necesariamente entiende de IA.</p>
+                <p><strong>La solución:</strong> Carrusel con brazo robótico como metáfora visual, tres beneficios clave (Automatiza, Controla, Escala), integración con modelo Deepseek, y un CTA claro. Estilo neón tech sobre fondo oscuro.</p>
+                <p><strong>Resultado:</strong> Pieza promocional que explica conceptos complejos en segundos. Copy que engancha a developers y business owners por igual.</p>`,
+                link: null
+            },
+            nova: {
+                title: '🦷 Nova Clinic — Sofía',
+                sub: 'Agente de voz · ElevenLabs',
+                img: null,
+                text: `<p><strong>Cliente:</strong> Nova Clinic — clínica dental.</p>
+                <p><strong>El desafío:</strong> Una clínica dental necesitaba atención 24/7 sin contratar personal extra. Las llamadas se perdían fuera de horario.</p>
+                <p><strong>La solución:</strong> Agente de voz "Sofía" con ElevenLabs: voz natural, capaz de informar sobre servicios, precios y reservar citas automáticamente. Integrado en web con widget de llamada.</p>
+                <p><strong>Tecnología:</strong> ElevenLabs voice agent + web embed. Atención en español latino con tono cálido y profesional.</p>
+                <p><strong>Resultado:</strong> Disponibilidad 24/7, reservas automáticas, pacientes atendidos al instante.</p>`,
+                link: 'https://ubiquitous-rugelach-07a6e0.netlify.app/'
+            },
+            optimlk: {
+                title: '🥤 optim\'lk PRO',
+                sub: 'Creativo IA de producto · 3 sabores',
+                img: 'assets/optimlk-pro.png',
+                text: `<p><strong>Cliente:</strong> optim'lk PRO — batido hiperproteico.</p>
+                <p><strong>El desafío:</strong> Mostrar 3 sabores nuevos (Pistacho Dubai, Fresa, Chocolate) sin hacer una sesión de fotos tradicional. Necesitaban versatilidad para distintos formatos.</p>
+                <p><strong>La solución:</strong> A partir de una foto del producto, generé 3 versiones con IA, cada una en su propio escenario dinámico con salpicaduras e ingredientes reales. Presentación en mockups de smartphone para dar contexto digital.</p>
+                <p><strong>Resultado:</strong> Creativos listos para anuncios, stories y reels. Coherencia de marca en los 3 sabores. Sin sesión de fotos, sin estudio, sin esperas.</p>`,
+                link: null
+            },
+            genesis: {
+                title: '🏛️ Genesis Empire Sales Agency',
+                sub: 'Identidad de marca · Logotipo',
+                img: 'assets/genesis-empire.png',
+                text: `<p><strong>Cliente:</strong> Genesis Empire Sales Agency — agencia de ventas.</p>
+                <p><strong>El desafío:</strong> Necesitaban una identidad que transmitiera poder, origen y legado. Algo que no pasara desapercibido.</p>
+                <p><strong>La solución:</strong> Diseño de logo con fénix central (renacimiento), grecas griegas (eternidad), runas (conocimiento ancestral) y flecha (dirección). Tipografía dorada metálica sobre fondo oscuro.</p>
+                <p><strong>Resultado:</strong> Identidad visual que comunica autoridad desde el primer vistazo. Aplicable a tarjetas, web, redes sociales.</p>`,
+                link: null
+            },
+            motors: {
+                title: '🚗 305 Motors Miami',
+                sub: 'Anuncio · Concesionario Toyota & Hyundai',
+                img: 'assets/305-motors.jpeg',
+                text: `<p><strong>Cliente:</strong> 305 Motors Miami — concesionario de coches.</p>
+                <p><strong>El desafío:</strong> Atraer a la comunidad latina en Miami con opciones de financiación flexibles. Había que comunicar confianza y accesibilidad.</p>
+                <p><strong>La solución:</strong> Anuncio con copy persuasivo en español, destacando puntos clave: financiamiento rápido, sin Social, Bad Credit OK. Diseño premium con SUV y pickup sobre fondo oscuro.</p>
+                <p><strong>Resultado:</strong> Pieza publicitaria lista para redes, segmentada al público latino que busca coche en Miami.</p>`,
+                link: null
+            },
+            arcano: {
+                title: '✦ ARCANO',
+                sub: 'Identidad visual · Marca personal',
+                img: 'assets/yeray-arcane.png',
+                text: `<p><strong>Marca personal:</strong> Mi propia identidad visual.</p>
+                <p><strong>El concepto:</strong> Fusión de lo místico y lo premium. Oscuro, elegante, magnético. El estilo ARCANO es el método que aplico a cada proyecto de cliente.</p>
+                <p><strong>Elementos clave:</strong> Paleta oscura con acentos púrpura y dorado. Tipografía bold. Imágenes de alto contraste. Una estética que dice "esto es serio" sin decir una palabra.</p>
+                <p><strong>Filosofía:</strong> No es solo diseño. Es posicionamiento. Cada carrusel, cada anuncio, cada pieza que creo lleva esta identidad: la de alguien que sabe lo que hace.</p>`,
+                link: 'https://yeraybarandallaclasesia.my.canva.site/yeray-growth-ai-marketing'
+            },
+            gpts: {
+                title: '🧠 GPTs Personalizados',
+                sub: 'Asistentes IA a medida',
+                img: null,
+                text: `<p><strong>¿Qué son?</strong> Versiones personalizadas de ChatGPT entrenadas con tu conocimiento, tu tono y tus procesos.</p>
+                <p><strong>Para qué sirven:</strong> Atención al cliente automatizada, generación de contenido con tu voz, análisis de datos de tu negocio,embudos de venta automatizados, cualquier proceso repetitivo que pueda escalar con IA.</p>
+                <p><strong>Cómo funciona:</strong> Me das tu conocimiento (documentos, FAQs, transcripciones, ejemplos) y construyo un GPT que hable por ti. Con tu tono,tu estilo,tu marca.</p>
+                <p><strong>¿Hablamos de tu caso?</strong> Cada GPT es único. Contáctame y vemos qué necesita tu negocio.</p>`,
+                link: null
+            }
+        };
+
+        function openModal(id) {
+            const ex = exhibits[id];
+            if (!ex) return;
+            let html = '';
+            if (ex.img) {
+                html += `<img class="modal-image" src="${ex.img}" alt="${ex.title}" />`;
+            }
+            html += `<h2>${ex.title}</h2>`;
+            html += `<div class="modal-sub">${ex.sub}</div>`;
+            html += ex.text;
+            if (ex.link) {
+                html += `<a href="${ex.link}" target="_blank" class="btn-primary">Visitar proyecto →</a>`;
+            }
+            modalContent.innerHTML = html;
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
