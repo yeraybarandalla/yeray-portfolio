@@ -258,6 +258,25 @@
         .exhibit-image { width:100%; aspect-ratio:4/3; overflow:hidden; position:relative; background:#0a0a14; }
         .exhibit-image img { width:100%; height:100%; object-fit:cover; transition:transform 0.6s; }
         .exhibit:hover .exhibit-image img { transform:scale(1.05); }
+        .exhibit-image .exhibit-slider {
+            position:absolute; inset:0;
+            display:flex; transition:opacity 1s ease;
+        }
+        .exhibit-image .exhibit-slider img {
+            position:absolute; inset:0; width:100%; height:100%;
+            object-fit:cover; opacity:0;
+            transition:opacity 1s ease;
+        }
+        .exhibit-image .exhibit-slider img.active { opacity:1; }
+        .exhibit-image .slide-dots {
+            position:absolute; bottom:0.6rem; left:50%; transform:translateX(-50%);
+            display:flex; gap:4px;
+        }
+        .exhibit-image .slide-dots .dot {
+            width:5px; height:5px; border-radius:50%;
+            background:rgba(255,255,255,0.25); transition:background 0.3s;
+        }
+        .exhibit-image .slide-dots .dot.active { background:rgba(168,85,247,0.8); }
         .exhibit-tag {
             position:absolute; top:1rem; left:1rem;
             padding:0.25rem 0.8rem; font-size:0.6rem; letter-spacing:1.5px; text-transform:uppercase;
@@ -354,8 +373,6 @@
             background:linear-gradient(90deg,#a855f7,#d4a853);
             margin:0 auto 1.5rem; border-radius:4px;
         }
-
-        /* ─── MODAL ─── */
         .modal-overlay {
             position:fixed; inset:0; z-index:200;
             background:rgba(0,0,0,0.85); backdrop-filter:blur(16px);
@@ -605,10 +622,23 @@
             </p>
             <div class="museum-grid">
 
-                <div class="exhibit reveal" onclick="openModal('tornike')">
+                <div class="exhibit reveal" onclick="openModal('tornike')" data-slideshow="true" data-images='["assets/tornike-slide1.png","assets/tornike-mito-1.png","assets/tornike-entorno-1.png","assets/tornike-angulo-1.png","assets/tornike-slide2.png"]'>
                     <div class="exhibit-image">
-                        <img src="assets/tornike-slide1.png" alt="Tornike" loading="lazy" />
+                        <div class="exhibit-slider">
+                            <img src="assets/tornike-slide1.png" alt="Tornike" loading="lazy" class="active" />
+                            <img src="assets/tornike-mito-1.png" alt="Tornike Mito vs Realidad" loading="lazy" />
+                            <img src="assets/tornike-entorno-1.png" alt="Tornike Entorno Hormonal" loading="lazy" />
+                            <img src="assets/tornike-angulo-1.png" alt="Tornike Ángulo" loading="lazy" />
+                            <img src="assets/tornike-slide2.png" alt="Tornike Slide" loading="lazy" />
+                        </div>
                         <span class="exhibit-tag">🏋️ Fitness 40+</span>
+                        <div class="slide-dots">
+                            <span class="dot active"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
                     </div>
                     <div class="exhibit-body">
                         <h3>Tornike</h3>
@@ -851,6 +881,26 @@
         for(const el of revealEls) observer.observe(el);
 
         const modalOverlay=document.getElementById('modal'),modalContent=document.getElementById('modal-content');
+
+        /* ─── SLIDESHOW ─── */
+        document.querySelectorAll('[data-slideshow="true"]').forEach(function(el) {
+            var imgs = el.querySelectorAll('.exhibit-slider img');
+            var dots = el.querySelectorAll('.slide-dots .dot');
+            if (imgs.length < 2) return;
+            var current = 0, interval;
+            function showSlide(idx) {
+                imgs.forEach(function(i) { i.classList.remove('active'); });
+                dots.forEach(function(d) { d.classList.remove('active'); });
+                imgs[idx].classList.add('active');
+                if (dots[idx]) dots[idx].classList.add('active');
+                current = idx;
+            }
+            function nextSlide() { showSlide((current + 1) % imgs.length); }
+            el.addEventListener('mouseenter', function() { clearInterval(interval); });
+            el.addEventListener('mouseleave', function() { interval = setInterval(nextSlide, 3000); });
+            interval = setInterval(nextSlide, 3000);
+        });
+
         const exhibits={
             tornike:{
                 title:'🏋️ Tornike',
