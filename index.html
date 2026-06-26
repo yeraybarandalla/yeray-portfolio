@@ -239,6 +239,23 @@
             font-weight: 600;
         }
 
+        /* ─── FILTERS ─── */
+        .filter-bar {
+            display: flex; flex-wrap: wrap; gap: 0.5rem;
+            margin-bottom: 2rem; justify-content: center;
+        }
+        .filter-btn {
+            padding: 0.5rem 1.2rem; cursor: pointer;
+            font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase;
+            border-radius: 50px; background: transparent;
+            color: #666; border: 1px solid rgba(168,85,247,0.1);
+            transition: all 0.3s; font-weight: 500;
+        }
+        .filter-btn:hover { color: #a855f7; border-color: rgba(168,85,247,0.25); }
+        .filter-btn.active { color:#fff; background:rgba(168,85,247,0.15); border-color: rgba(168,85,247,0.3); }
+        .exhibit { transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s, opacity 0.4s, transform 0.4s; }
+        .exhibit.hidden { display:none; }
+
         /* ─── GALLERY ─── */
         .museum-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap: 2rem;
@@ -620,9 +637,19 @@
                 Clientes reales. Resultados reales. Cada proyecto tiene un antes y un después.
                 Pulsa para ver el detalle.
             </p>
+            <div class="filter-bar reveal" id="filterBar">
+                <button class="filter-btn active" data-filter="all">🎭 Todos</button>
+                <button class="filter-btn" data-filter="carruseles">🎨 Carruseles</button>
+                <button class="filter-btn" data-filter="portadas">🖼️ Portadas</button>
+                <button class="filter-btn" data-filter="logos">🏛️ Logos</button>
+                <button class="filter-btn" data-filter="creativos">📸 Creativos IA</button>
+                <button class="filter-btn" data-filter="banners">🎬 Banners</button>
+                <button class="filter-btn" data-filter="videos">🎥 Videos</button>
+                <button class="filter-btn" data-filter="voz">🎙️ Voz IA</button>
+            </div>
             <div class="museum-grid">
 
-                <div class="exhibit reveal" onclick="openModal('tornike')" data-slideshow="true" data-images='["assets/tornike-slide1.png","assets/tornike-mito-1.png","assets/tornike-entorno-1.png","assets/tornike-angulo-1.png","assets/tornike-slide2.png"]'>
+                <div class="exhibit reveal" onclick="openModal('tornike')" data-category="carruseles" data-slideshow="true" data-images='["assets/tornike-slide1.png","assets/tornike-mito-1.png","assets/tornike-entorno-1.png","assets/tornike-angulo-1.png","assets/tornike-slide2.png"]'>
                     <div class="exhibit-image">
                         <div class="exhibit-slider">
                             <img src="assets/tornike-slide1.png" alt="Tornike" loading="lazy" class="active" />
@@ -648,7 +675,7 @@
                     </div>
                 </div>
 
-                <div class="exhibit reveal" onclick="openModal('openclaw')">
+                <div class="exhibit reveal" onclick="openModal('openclaw')" data-category="portadas">
                     <div class="exhibit-image">
                         <img src="assets/openclaw-ad.png" alt="OpenClaw" loading="lazy" />
                         <span class="exhibit-tag">🤖 Automatización IA</span>
@@ -661,7 +688,7 @@
                     </div>
                 </div>
 
-                <div class="exhibit reveal" onclick="openModal('nova')">
+                <div class="exhibit reveal" onclick="openModal('nova')" data-category="voz">
                     <div class="exhibit-image">
                         <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d0d1a,#1a1040);">
                             <div style="text-align:center;padding:2rem;">
@@ -680,7 +707,7 @@
                     </div>
                 </div>
 
-                <div class="exhibit reveal" onclick="openModal('optimlk')">
+                <div class="exhibit reveal" onclick="openModal('optimlk')" data-category="creativos">
                     <div class="exhibit-image">
                         <img src="assets/optimlk-pro.png" alt="optim'lk PRO" loading="lazy" />
                         <span class="exhibit-tag">🥤 Producto</span>
@@ -693,7 +720,7 @@
                     </div>
                 </div>
 
-                <div class="exhibit reveal" onclick="openModal('genesis')">
+                <div class="exhibit reveal" onclick="openModal('genesis')" data-category="logos">
                     <div class="exhibit-image">
                         <img src="assets/genesis-empire.png" alt="Genesis Empire" loading="lazy" />
                         <span class="exhibit-tag">🏛️ Branding</span>
@@ -706,7 +733,7 @@
                     </div>
                 </div>
 
-                <div class="exhibit reveal" onclick="openModal('motors')">
+                <div class="exhibit reveal" onclick="openModal('motors')" data-category="portadas">
                     <div class="exhibit-image">
                         <img src="assets/305-motors.jpeg" alt="305 Motors Miami" loading="lazy" />
                         <span class="exhibit-tag">🚗 Automoción</span>
@@ -719,7 +746,7 @@
                     </div>
                 </div>
 
-                <div class="exhibit reveal" onclick="openModal('arcano')">
+                <div class="exhibit reveal" onclick="openModal('arcano')" data-category="carruseles">
                     <div class="exhibit-image">
                         <img src="assets/yeray-arcane.png" alt="ARCANO" loading="lazy" />
                         <span class="exhibit-tag">✦ Marca Personal</span>
@@ -732,7 +759,7 @@
                     </div>
                 </div>
 
-                <div class="exhibit reveal" onclick="openModal('gpts')">
+                <div class="exhibit reveal" onclick="openModal('gpts')" data-category="gpts">
                     <div class="exhibit-image">
                         <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d0d1a,#1a1040);">
                             <div style="text-align:center;padding:2rem;">
@@ -748,6 +775,42 @@
                         <div class="exhibit-sub">Asistentes IA entrenados con tu conocimiento</div>
                         <p>Versiones de ChatGPT hechas para tu negocio. Atención al cliente, contenido, análisis de datos, ventas. Cada GPT habla con tu tono y tu conocimiento.</p>
                         <div class="exhibit-result">📈 Tu conocimiento multiplicado · Escala sin contratar</div>
+                    </div>
+                </div>
+
+                <div class="exhibit reveal" onclick="openModal('ytbanners')" data-category="banners" data-slideshow="true">
+                    <div class="exhibit-image">
+                        <div class="exhibit-slider">
+                            <img src="assets/yt-banner-1.png" alt="YT Banner 1" loading="lazy" class="active" />
+                            <img src="assets/yt-banner-2.png" alt="YT Banner 2" loading="lazy" />
+                        </div>
+                        <span class="exhibit-tag">🎬 YouTube</span>
+                        <div class="slide-dots"><span class="dot active"></span><span class="dot"></span></div>
+                    </div>
+                    <div class="exhibit-body">
+                        <h3>Banners YouTube</h3>
+                        <div class="exhibit-sub">Diseño de canales · Branding visual</div>
+                        <p>Banners completos para canal de YouTube. Diseño oscuro premium con tipografía impactante y composición estratégica para retener la atención.</p>
+                        <div class="exhibit-result">📈 Identidad visual para canal de YouTube</div>
+                    </div>
+                </div>
+
+                <div class="exhibit reveal" onclick="openModal('videos')" data-category="videos">
+                    <div class="exhibit-image">
+                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d0d1a,#1a1040);">
+                            <div style="text-align:center;padding:2rem;">
+                                <div style="font-size:4rem;margin-bottom:0.5rem;">🎥</div>
+                                <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:#a855f7;">TNT</div>
+                                <div style="font-size:0.7rem;color:#666;margin-top:0.3rem;">Video IA</div>
+                            </div>
+                        </div>
+                        <span class="exhibit-tag">🎥 Video</span>
+                    </div>
+                    <div class="exhibit-body">
+                        <h3>TNT — Videos con IA</h3>
+                        <div class="exhibit-sub">Publicidad en video · Formato 16:9 y 9:16</div>
+                        <p>Videos publicitarios generados con IA. Formatos horizontal para YouTube y vertical para Reels/TikTok. Creatividad visual sin rodar una sola escena.</p>
+                        <div class="exhibit-result">📈 Video publicitario sin producción tradicional</div>
                     </div>
                 </div>
 
@@ -882,6 +945,22 @@
 
         const modalOverlay=document.getElementById('modal'),modalContent=document.getElementById('modal-content');
 
+        /* ─── FILTERS ─── */
+        (function(){
+            var btns = document.querySelectorAll('#filterBar .filter-btn');
+            var exhibits = document.querySelectorAll('.museum-grid .exhibit');
+            function filter(cat){
+                btns.forEach(function(b){ b.classList.toggle('active', b.dataset.filter === cat); });
+                exhibits.forEach(function(e){
+                    if(cat === 'all') { e.classList.remove('hidden'); }
+                    else { e.classList.toggle('hidden', e.dataset.category !== cat); }
+                });
+            }
+            btns.forEach(function(b){
+                b.addEventListener('click', function(){ filter(this.dataset.filter); });
+            });
+        })();
+
         /* ─── SLIDESHOW ─── */
         document.querySelectorAll('[data-slideshow="true"]').forEach(function(el) {
             var imgs = el.querySelectorAll('.exhibit-slider img');
@@ -964,6 +1043,22 @@
                 img:null,
                 result:'📈 Tu conocimiento multiplicado · Escala sin contratar',
                 text:`<p><strong>¿Qué son?</strong> Versiones de ChatGPT entrenadas con tu información, tu tono y tus procesos.</p><p><strong>Para qué sirven:</strong> Atención al cliente automatizada, generación de contenido, análisis de datos, ventas. Cada GPT habla con tu voz.</p><p><strong>¿Hablamos de tu caso?</strong> Cada GPT es único. Contáctame y vemos qué necesita tu negocio.</p>`,
+                link:null
+            },
+            ytbanners:{
+                title:'🎬 Banners YouTube',
+                sub:'Diseño de canales · Branding visual',
+                img:'assets/yt-banner-1.png',
+                result:'📈 Identidad visual para canal de YouTube',
+                text:`<p><strong>Proyecto:</strong> Banners para canal de YouTube.</p><p><strong>El desafío:</strong> Crear una identidad visual completa para un canal que necesitaba destacar en la plataforma.</p><p><strong>La solución:</strong> Dos banners con diseño oscuro premium, tipografía impactante, composición estratégica. Coherencia de marca en ambos formatos.</p>`,
+                link:null
+            },
+            videos:{
+                title:'🎥 TNT — Videos con IA',
+                sub:'Publicidad en video · IA Generativa',
+                img:null,
+                result:'📈 Video publicitario sin producción tradicional',
+                text:`<p><strong>Proyecto:</strong> Videos publicitarios generados con inteligencia artificial.</p><p><strong>El desafío:</strong> Crear contenido en video sin equipo de producción, sin actores, sin cámara.</p><p><strong>La solución:</strong> Videos generados con IA en dos formatos: 16:9 para YouTube y 9:16 para Reels/TikTok. Creatividad visual sin límites de producción.</p>`,
                 link:null
             }
         };
