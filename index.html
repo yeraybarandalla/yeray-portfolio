@@ -294,6 +294,7 @@
             background:rgba(255,255,255,0.25); transition:background 0.3s;
         }
         .exhibit-image .slide-dots .dot.active { background:rgba(168,85,247,0.8); }
+        .exhibit-video { width:100%; height:100%; object-fit:cover; }
         .exhibit-tag {
             position:absolute; top:1rem; left:1rem;
             padding:0.25rem 0.8rem; font-size:0.6rem; letter-spacing:1.5px; text-transform:uppercase;
@@ -795,16 +796,14 @@
                     </div>
                 </div>
 
-                <div class="exhibit reveal" onclick="openModal('videos')" data-category="videos">
-                    <div class="exhibit-image">
-                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d0d1a,#1a1040);">
-                            <div style="text-align:center;padding:2rem;">
-                                <div style="font-size:4rem;margin-bottom:0.5rem;">🎥</div>
-                                <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;color:#a855f7;">TNT</div>
-                                <div style="font-size:0.7rem;color:#666;margin-top:0.3rem;">Video IA</div>
-                            </div>
+                <div class="exhibit reveal" onclick="openModal('videos')" data-category="videos" data-slideshow="true">
+                    <div class="exhibit-image" style="overflow:hidden;">
+                        <div class="exhibit-slider">
+                            <video class="exhibit-video active" src="assets/logos-banners/Tnt 16-9.mp4" muted loop playsinline preload="metadata"></video>
+                            <video class="exhibit-video" src="assets/logos-banners/TNT%209-16%20loop.mp4" muted loop playsinline preload="metadata"></video>
                         </div>
                         <span class="exhibit-tag">🎥 Video</span>
+                        <div class="slide-dots"><span class="dot active"></span><span class="dot"></span></div>
                     </div>
                     <div class="exhibit-body">
                         <h3>TNT — Videos con IA</h3>
@@ -994,21 +993,27 @@
 
         /* ─── SLIDESHOW ─── */
         document.querySelectorAll('[data-slideshow="true"]').forEach(function(el) {
-            var imgs = el.querySelectorAll('.exhibit-slider img');
+            var slides = el.querySelectorAll('.exhibit-slider > *');
             var dots = el.querySelectorAll('.slide-dots .dot');
-            if (imgs.length < 2) return;
+            if (slides.length < 2) return;
             var current = 0, interval;
             function showSlide(idx) {
-                imgs.forEach(function(i) { i.classList.remove('active'); });
+                slides.forEach(function(s) {
+                    s.classList.remove('active');
+                    if (s.tagName === 'VIDEO') { s.pause(); s.currentTime = 0; }
+                });
                 dots.forEach(function(d) { d.classList.remove('active'); });
-                imgs[idx].classList.add('active');
+                slides[idx].classList.add('active');
                 if (dots[idx]) dots[idx].classList.add('active');
+                if (slides[idx].tagName === 'VIDEO') slides[idx].play();
                 current = idx;
             }
-            function nextSlide() { showSlide((current + 1) % imgs.length); }
+            function nextSlide() { showSlide((current + 1) % slides.length); }
             el.addEventListener('mouseenter', function() { clearInterval(interval); });
-            el.addEventListener('mouseleave', function() { interval = setInterval(nextSlide, 3000); });
-            interval = setInterval(nextSlide, 3000);
+            el.addEventListener('mouseleave', function() { interval = setInterval(nextSlide, 5000); });
+            interval = setInterval(nextSlide, 5000);
+            // Start first video if it is one
+            if (slides[0].tagName === 'VIDEO') slides[0].play();
         });
 
         const exhibits={
@@ -1089,7 +1094,11 @@
                 sub:'Publicidad en video · IA Generativa',
                 img:null,
                 result:'📈 Video publicitario sin producción tradicional',
-                text:`<p><strong>Proyecto:</strong> Videos publicitarios generados con inteligencia artificial.</p><p><strong>El desafío:</strong> Crear contenido en video sin equipo de producción, sin actores, sin cámara.</p><p><strong>La solución:</strong> Videos generados con IA en dos formatos: 16:9 para YouTube y 9:16 para Reels/TikTok. Creatividad visual sin límites de producción.</p>`,
+                text:`<p><strong>Proyecto:</strong> Videos publicitarios generados con inteligencia artificial.</p><p><strong>El desafío:</strong> Crear contenido en video sin equipo de producción, sin actores, sin cámara.</p><p><strong>La solución:</strong> Videos generados con IA en dos formatos: 16:9 para YouTube y 9:16 para Reels/TikTok. Creatividad visual sin límites de producción.</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem;">
+                    <div><video src="assets/logos-banners/Tnt 16-9.mp4" controls style="width:100%;border-radius:8px;border:1px solid rgba(168,85,247,0.1);"></video><div style="text-align:center;font-size:0.7rem;color:#666;margin-top:0.3rem;">Formato 16:9</div></div>
+                    <div><video src="assets/logos-banners/TNT%209-16%20loop.mp4" controls style="width:100%;border-radius:8px;border:1px solid rgba(168,85,247,0.1);"></video><div style="text-align:center;font-size:0.7rem;color:#666;margin-top:0.3rem;">Formato 9:16</div></div>
+                </div>`,
                 link:null
             },
             magnific:{
